@@ -11,7 +11,7 @@ export default defineConfig({
   },
   outputPath: "docs",
   base: "/hook.github.io",
-  // publicPath: '/hook.github.io',
+  publicPath: '/hook.github.io/',
   routes: [
     {
       path: '/',
