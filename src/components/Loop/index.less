@@ -1,0 +1,52 @@
+@h: 700px;
+
+.text {
+  position: absolute;
+  width: 100%;
+  background-color: #faebd700;
+  animation: test 10s steps(1000) forwards infinite;
+  color: #ff7800;
+  display: flex;
+}
+
+@keyframes test {
+  0% {
+    top: 0;
+  }
+
+  100% {
+    top: @h;
+  }
+}
+
+.bc {
+  height: @h;
+  background-color: #faebd700;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+#aircraft {
+  position: absolute;
+  background-color: aqua;
+  width: 100px;
+  height: 100px;
+  bottom: 3;
+  top: 3;
+  left: 3;
+  right: 3;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.cannon {
+  position: absolute;
+  width: 5px;
+  height: 10px;
+  background-color: rgb(248 192 7);
+  border-radius: 3px;
+}
