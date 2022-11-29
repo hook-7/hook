@@ -10,8 +10,8 @@ export default defineConfig({
     title: '@umijs/max',
   },
   outputPath: "docs",
-  base: "/hook.github.io",
-  publicPath: '/hook.github.io/',
+  base: "/hook",
+  publicPath: '/hook/',
   routes: [
     {
       path: '/',

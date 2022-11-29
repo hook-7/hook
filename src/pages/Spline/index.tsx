@@ -3,9 +3,9 @@ import Spline from '@splinetool/react-spline';
 export default function App() {
   return (
     <div style={{height:850 ,width:1600}}>
-      {/* <Spline scene={require('@/assets/scene.splinecode')} /> */}
+      <Spline scene={require('@/assets/scene.splinecode')} />
       {/* <iframe src="https://app.modaiyun.com/share-token/1586286354391162880?source=copylink"  width='100%' height='100%' frameBorder="0" allowFullScreen  ></iframe> */}
-       <iframe src="https://www.kujiale.com/m/xiaoguotu/pano/3FOANWM7JFG8?needmplogin=1"  width='100%' height='100%' frameBorder="0" allowFullScreen  ></iframe>
+       {/* <iframe src="https://www.kujiale.com/m/xiaoguotu/pano/3FOANWM7JFG8?needmplogin=1"  width='100%' height='100%' frameBorder="0" allowFullScreen  ></iframe> */}
       </div>
     
   );

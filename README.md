@@ -1,3 +1,3 @@
-# README
+# 平时开发测试使用项目
 
-`@umijs/max` 模板项目，更多功能参考 [Umi Max 简介](https://next.umijs.org/zh-CN/docs/max/introduce)
+实现一些小效果, 然后再进行扩展
