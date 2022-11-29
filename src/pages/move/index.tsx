@@ -31,7 +31,7 @@ export default ()=>{
            i.json().then(t => setStr(t.pwd)
             );
         })
-    },[])
+    })
     const lClick =()=>{
         setLeft(left - interval)
         console.log("<<<<<");
