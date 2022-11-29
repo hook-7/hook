@@ -1,8 +1,8 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import "./index.less"
 
 
-let str = "1 >>>>>>>>>>2>>>>>>>>>>~~~3>>>>>>>>>>~~~~~~~4>>>>>>>>>>~~~~~~~~~5>>>>>>>>>>~~~~~~~~6>>>>>>>>>>~~~~~~~~7>>>>>>>>>>~~~~~~~8>>>>>>>>>>>>>>>>>>>>9>>>>>>>>>>>>>>>>>>>>~~~~~10"
+
 const r = <svg t="1669343990413" className="icon" viewBox="0 0 1024 1024" version="1.1"
     xmlns="http://www.w3.org/2000/svg" p-id="3266" width="16" height="16">
     <path
@@ -25,6 +25,13 @@ const l = <svg t="1669344017329" className="icon" viewBox="0 0 1024 1024" versio
 const interval =100
 export default ()=>{
     const [left,setLeft]=  useState(0)
+    const [str, setStr] = useState<any>("")
+    useEffect(()=>{
+        fetch("http://ssh.hook-7.life:33321/").then(i=>{
+           i.json().then(t => setStr(t.pwd)
+            );
+        })
+    },[])
     const lClick =()=>{
         setLeft(left - interval)
         console.log("<<<<<");
