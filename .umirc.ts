@@ -13,7 +13,7 @@ export default defineConfig({
   outputPath: "docs",
   // base: "/#",
   // publicPath: '/static/',
-   publicPath: '/hook/',
+   publicPath: '/-/',
 
   proxy: {
     '/update': {
