@@ -12,7 +12,7 @@ export default defineConfig({
   },
   outputPath: "docs",
   // base: "/#",
-  publicPath: '/static/',
+  // publicPath: '/static/',
 
   proxy: {
     '/update': {
