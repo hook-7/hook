@@ -14,6 +14,7 @@ const getStyle = (el: Element) => {
 export default () => {
     // console.log(loopStyle.cannon);
     // console.log(enemyStyle.enemy);
+    
     let cannons = document.getElementsByClassName(loopStyle.cannon)
     let enemys = document.getElementsByClassName(enemyStyle.enemy)
     if (enemys.length && cannons.length) {

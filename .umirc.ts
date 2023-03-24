@@ -1,6 +1,7 @@
 import { defineConfig } from '@umijs/max';
 
 export default defineConfig({
+  history: {type: "hash"},
   antd: {},
   access: {},
   model: {},
@@ -10,8 +11,16 @@ export default defineConfig({
     title: '@umijs/max',
   },
   outputPath: "docs",
-  base: "/hook",
-  publicPath: '/hook/',
+  // base: "/#",
+  publicPath: '/static/',
+
+  proxy: {
+    '/update': {
+      target: 'http://127.0.0.1:8080/update',
+      changeOrigin: true,
+      pathRewrite: { '^/update': '' },
+    },
+  },
   routes: [
     {
       path: '/',
