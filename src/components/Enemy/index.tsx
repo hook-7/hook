@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 import { createRoot } from "react-dom/client"
 import style from './index.less'
+import gold from '@/assets/gold.svg';
+
 
 const Cannon =(props: {bottom:number,left:number,root:any,div:any})=>{
     
@@ -18,7 +20,7 @@ const Cannon =(props: {bottom:number,left:number,root:any,div:any})=>{
     }
     },[bottom])
 
-    return <div className={style.enemy} style={{bottom:bottom-50,left:props.left+50}}></div>
+    return <div className={style.enemy} style={{bottom:bottom-50,left:props.left+50}}><img src={gold}></img></div>
 }
 
 const fall = (id: string,left: any,bottom: any)=>{

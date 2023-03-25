@@ -13,13 +13,13 @@ export default defineConfig({
   outputPath: "docs",
   // base: "/#",
   // publicPath: '/static/',
-   publicPath: '/-/',
+   publicPath: '/hook/',
 
   proxy: {
-    '/update': {
-      target: 'http://127.0.0.1:8080/update',
+    '/api': {
+      target: 'http://127.0.0.1:8080/',
       changeOrigin: true,
-      pathRewrite: { '^/update': '' },
+      pathRewrite: { '^/api': 'api' },
     },
   },
   routes: [
