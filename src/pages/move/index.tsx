@@ -1,54 +1,166 @@
-import { useEffect, useState } from "react"
-import "./index.less"
+import React, { useState, useEffect, useRef } from 'react';
 
+const { WebSocket } = window;
 
+const App: React.FC = () => {
+  const [account, setAccount] = useState({ user: "", pwd: "" });
 
-const r = <svg t="1669343990413" className="icon" viewBox="0 0 1024 1024" version="1.1"
-    xmlns="http://www.w3.org/2000/svg" p-id="3266" width="16" height="16">
-    <path
-        d="M544 522.666667c0-8.533333-4.266667-17.066667-10.666667-23.466667L192 189.866667c-12.8-12.8-34.133333-10.666667-44.8 2.133333-12.8 12.8-10.666667 34.133333 2.133333 44.8l315.733334 285.866667L149.333333 808.533333c-12.8 12.8-14.933333 32-2.133333 44.8 6.4 6.4 14.933333 10.666667 23.466667 10.666667 8.533333 0 14.933333-2.133333 21.333333-8.533333l341.333333-309.333334c6.4-6.4 10.666667-14.933333 10.666667-23.466666z"
-        p-id="3267"></path>
-    <path
-        d="M864 499.2l-341.333333-309.333333c-12.8-12.8-34.133333-10.666667-44.8 2.133333-12.8 12.8-10.666667 34.133333 2.133333 44.8l315.733333 285.866667-315.733333 285.866666c-12.8 12.8-14.933333 32-2.133333 44.8 6.4 6.4 14.933333 10.666667 23.466666 10.666667 8.533333 0 14.933333-2.133333 21.333334-8.533333l341.333333-309.333334c6.4-6.4 10.666667-14.933333 10.666667-23.466666 0-8.533333-4.266667-17.066667-10.666667-23.466667z"
-        p-id="3268"></path>
-</svg>
+  const func = (v: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(account);
+    fetch("/login", {
+      method: 'POST',
+      body: JSON.stringify(account)
+    });
+  };
 
-const l = <svg t="1669344017329" className="icon" viewBox="0 0 1024 1024" version="1.1"
-    xmlns="http://www.w3.org/2000/svg" p-id="3425" width="16" height="16">
-    <path
-        d="M842.666667 864c-8.533333 0-14.933333-2.133333-21.333334-8.533333l-341.333333-309.333334c-6.4-6.4-10.666667-14.933333-10.666667-23.466666 0-8.533333 4.266667-17.066667 10.666667-23.466667l341.333333-309.333333c12.8-12.8 34.133333-10.666667 44.8 2.133333 12.8 12.8 10.666667 34.133333-2.133333 44.8L548.266667 522.666667l315.733333 285.866666c12.8 10.666667 14.933333 32 2.133333 44.8-6.4 6.4-14.933333 10.666667-23.466666 10.666667z"
-        p-id="3426"></path>
-    <path
-        d="M512 864c-8.533333 0-14.933333-2.133333-21.333333-8.533333L149.333333 546.133333c-6.4-6.4-10.666667-14.933333-10.666666-23.466666 0-8.533333 4.266667-17.066667 10.666666-23.466667L490.666667 189.866667c12.8-12.8 34.133333-10.666667 44.8 2.133333 12.8 12.8 10.666667 34.133333-2.133334 44.8L217.6 522.666667 533.333333 808.533333c12.8 12.8 14.933333 32 2.133334 44.8-6.4 6.4-14.933333 10.666667-23.466667 10.666667z"
-        p-id="3427"></path>
-</svg>
-const interval =100
-export default ()=>{
-    const [left,setLeft]=  useState(0)
-    const [str, setStr] = useState<any>("")
-    useEffect(()=>{
-        fetch("http://ssh.hook-7.life:33321/").then(i=>{
-           i.json().then(t => setStr(t.pwd)
-            );
-        })
-    })
-    const lClick =()=>{
-        setLeft(left - interval)
-        console.log("<<<<<");
-        
+  const func2 = (v: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = v.target;
+    setAccount(prevAccount => ({ ...prevAccount, [name]: value }));
+  };
+
+  return (
+    <div onChange={func2}>
+      账号:<input type="text" name="user" defaultValue={account.user} />
+      密码:<input type="text" name="pwd" defaultValue={account.pwd} />
+      <button onClick={func}>登录</button>
+      <Addresses />
+      <ChatBox />
+    </div>
+  );
+};
+
+function Addresses() {
+  const [addresses, setAddresses] = useState<string[]>([]);
+
+  useEffect(() => {
+    async function fetchAddresses() {
+      const response = await fetch('/getTCPConns');
+      const data = await response.json();
+      setAddresses(data.addresses);
     }
-    const rClick = () => {
-        setLeft(left + interval)
-        console.log(">>>>>>");
-    }
-    return (<div className="father">
-            <blockquote className="layui-elem-quote">
-                <div className="partition" >
-                <div className="text" style={{ left: left }}>{str}</div>
-                    
-                </div>
-            <button className="but" onClick={lClick}>{l}</button>
-            <button className="but" onClick={rClick}>{r}</button>
-            </blockquote> 
-    </div>)
+    fetchAddresses();
+  }, []);
+
+  return (
+    <div>
+      <h1>Addresses:</h1>
+      <ul>
+        {addresses.map((address, index) => (
+          <li key={index}>{address}</li>
+        ))}
+      </ul>
+    </div>
+  );
 }
+
+const ChatBox: React.FC = () => {
+  const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [messages, setMessages] = useState<string[]>([]);
+
+  useEffect(() => {
+    // let ws = new WebSocket('ws://' + location.host + '/ws');
+    let ws = new WebSocket('ws://120.77.79.24:38081/ws');
+    setSocket(ws);
+
+    const handleOpen = () => {
+      console.log('WebSocket connection opened');
+    };
+
+    const handleMessage = (event: MessageEvent) => {
+      const message = JSON.parse(event.data);
+      if (message) {
+        setMessages(message);
+      }
+    };
+
+    const handleClose = (event: CloseEvent) => {
+      console.log('WebSocket connection closed');
+      setSocket(null);
+      // Attempt to reconnect
+      setTimeout(() => {
+        ws = new WebSocket('ws://' + location.host + '/ws');
+        setSocket(ws);
+        ws.onopen = handleOpen;
+        ws.onmessage = handleMessage;
+        ws.onclose = handleClose;
+      }, 1000);
+    };
+
+    ws.onopen = handleOpen;
+    ws.onmessage = handleMessage;
+    ws.onclose = handleClose;
+
+    return () => {
+      if (socket) {
+        socket.close();
+      }
+    };
+  }, []);
+
+  const sendMessage = (text: string) => {
+    if (socket) {
+      socket.send(text);
+    }
+  };
+
+  return (
+    <div>
+      <h1>Chat Room</h1>
+      <MessageList messages={messages} />
+      <InputBox onSend={sendMessage} />
+    </div>
+  );
+};
+
+interface MessageListProps {
+  messages: string[];
+}
+
+const MessageList: React.FC<MessageListProps> = ({ messages }) => {
+  const messagesEndRef = useRef<HTMLLIElement>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  return (
+    <ul id="wsBox" style={{
+        height: '500px',
+        overflow: 'hidden'
+      }}>
+      {messages.map((message, i) => (
+        <li key={i}>{message}</li>
+      ))}
+      <li ref={messagesEndRef} />
+    </ul>
+  );
+};
+
+interface InputBoxProps {
+  onSend: (text: string) => void;
+}
+
+const InputBox: React.FC<InputBoxProps> = ({ onSend }) => {
+  const [text, setText] = useState('');
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (text.trim()) {
+      onSend(text);
+      setText('');
+    }
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setText(event.target.value);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input type="text" value={text} onChange={handleChange} />
+      <button type="submit">Send</button>
+    </form>
+  );
+};
+
+export default App;

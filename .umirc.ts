@@ -1,5 +1,7 @@
 import { defineConfig } from '@umijs/max';
 
+const _baseUrl = 'http://127.0.0.1:33333/'
+
 export default defineConfig({
   history: {type: "hash"},
   antd: {},
@@ -11,15 +13,20 @@ export default defineConfig({
     title: '@umijs/max',
   },
   outputPath: "docs",
-  // base: "/#",
+  // base: "/hook",
   // publicPath: '/static/',
-   publicPath: '/hook/',
+  //  publicPath: '/hook/',
 
   proxy: {
     '/api': {
       target: 'http://127.0.0.1:8080/',
       changeOrigin: true,
       pathRewrite: { '^/api': 'api' },
+    },
+    '/operation': {
+      target: _baseUrl,
+      changeOrigin: true,
+      pathRewrite: { '^/operation': 'operation' },
     },
   },
   routes: [
