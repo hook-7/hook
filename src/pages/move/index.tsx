@@ -1,28 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
+import './index.less'
 
 const { WebSocket } = window;
 
 const App: React.FC = () => {
-  const [account, setAccount] = useState({ user: "", pwd: "" });
-
-  const func = (v: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(account);
-    fetch("/login", {
-      method: 'POST',
-      body: JSON.stringify(account)
-    });
-  };
-
-  const func2 = (v: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = v.target;
-    setAccount(prevAccount => ({ ...prevAccount, [name]: value }));
-  };
 
   return (
-    <div onChange={func2}>
-      账号:<input type="text" name="user" defaultValue={account.user} />
-      密码:<input type="text" name="pwd" defaultValue={account.pwd} />
-      <button onClick={func}>登录</button>
+    <div className='room'>
       <Addresses />
       <ChatBox />
     </div>
@@ -124,10 +108,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages }) => {
   }, [messages]);
 
   return (
-    <ul id="wsBox" style={{
-        height: '500px',
-        overflow: 'hidden'
-      }}>
+    <ul id="wsBox" >
       {messages.map((message, i) => (
         <li key={i}>{message}</li>
       ))}
