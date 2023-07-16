@@ -4,14 +4,7 @@ import type { UploadProps } from 'antd';
 import { Button, Modal, QRCode, Space, Table, Tag, Upload } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 
-const props: UploadProps = {
-  action: '/upload',
-  listType: 'picture-card',
-  onPreview: (file) => {
-    console.log(file);
 
-  }
-};
 
 interface Files {
   _id: string;
@@ -21,10 +14,29 @@ interface Files {
 }
 
 
+
 const App: React.FC = () => {
   const [data, setData] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState('');
+
+  const props: UploadProps = {
+    action: '/upload',
+    listType: 'text',
+    onChange: (file) => {
+      console.log(file.file.status);
+      if (file.file.status === "done") {
+        fetchData()
+      }
+
+    }
+  };
+
+  const fetchData = async () => {
+    const response = await fetch('/api/filedata');
+    const jsonData = await response.json();
+    setData(jsonData);
+  };
 
   const columns: ColumnsType<Files> = [
     {
@@ -43,12 +55,18 @@ const App: React.FC = () => {
       title: '操作',
       dataIndex: 'file_path',
       key: 'file_path',
-      render: (text) => (
-        <Button onClick={() => {
+      render: (text, record) => (
+        <div>  <Button onClick={() => {
           showModal()
           getURL(text)
         }}>显示二维码</Button>
+          <Button onClick={() => {
+            fetch('/api/delete/' + record._id).then(r => setData(data.filter(i => i._id != record._id)))
+          }}>删除</Button>
+        </div>
+
       ),
+
     },
     {
       title: '更新时间',
@@ -80,17 +98,13 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch('/api/filedata');
-      const jsonData = await response.json();
-      setData(jsonData);
-    };
-    fetchData();
+     fetchData()
+   
   }, []);
 
   return (<div>
     <Upload {...props} >
-      <Button icon={<UploadOutlined />}>Upload</Button>
+      <Button icon={<UploadOutlined rev={undefined} />}>Upload</Button>
     </Upload>
     <Table columns={columns} dataSource={data.map((item) => ({
       ...item,
@@ -98,9 +112,9 @@ const App: React.FC = () => {
     }))} />
 
     <Modal title="扫码下载" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered={true}>
-      <p>{ downloadUrl}</p>
+      <p>{downloadUrl}</p>
       <Space direction="vertical" align="center">
-        <QRCode value={ downloadUrl || '-'} />
+        <QRCode value={downloadUrl || '-'} />
       </Space>
     </Modal>
   </div>)
