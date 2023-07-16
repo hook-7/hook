@@ -1,6 +1,6 @@
 import { defineConfig } from '@umijs/max';
 
-const _baseUrl = 'http://127.0.0.1:33333/'
+const _baseUrl = 'http://127.0.0.1:8080/'
 
 export default defineConfig({
   history: {type: "hash"},
@@ -14,19 +14,24 @@ export default defineConfig({
   },
   outputPath: "docs",
   // base: "/hook",
-  // publicPath: '/static/',
+  publicPath: '/static/',
   //  publicPath: '/hook/',
 
   proxy: {
     '/api': {
-      target: 'http://127.0.0.1:8080/',
+      target: _baseUrl,
       changeOrigin: true,
       pathRewrite: { '^/api': 'api' },
     },
-    '/operation': {
+    '/upload': {
       target: _baseUrl,
       changeOrigin: true,
-      pathRewrite: { '^/operation': 'operation' },
+      pathRewrite: { '^/upload': 'upload' },
+    },
+    '/download': {
+      target: _baseUrl,
+      changeOrigin: true,
+      pathRewrite: { '^/download': 'download' },
     },
   },
   routes: [
